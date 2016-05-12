@@ -5,7 +5,7 @@ import io.brant.examples.annotation.ColumnPosition;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-//@Entity
+@Entity
 public class CompanyTest {
 
     @Id
