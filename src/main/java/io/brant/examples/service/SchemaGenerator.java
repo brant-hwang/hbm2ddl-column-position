@@ -9,6 +9,7 @@ import org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -92,22 +93,24 @@ public class SchemaGenerator extends SchemaGeneratorBase {
         String columnName;
         int position = Integer.MAX_VALUE - 10;
 
-        Column column = field.getAnnotation(Column.class);
-        ColumnPosition columnPosition = field.getAnnotation(ColumnPosition.class);
+        if (field.getAnnotation(Transient.class) == null) {
+            Column column = field.getAnnotation(Column.class);
+            ColumnPosition columnPosition = field.getAnnotation(ColumnPosition.class);
 
-        if (column != null && !"".equals(column.name())) {
-            columnName = column.name();
-        } else {
-            columnName = new SpringNamingStrategy().columnName(name);
-        }
+            if (column != null && !"".equals(column.name())) {
+                columnName = column.name();
+            } else {
+                columnName = new SpringNamingStrategy().columnName(name);
+            }
 
-        if (columnPosition != null && columnPosition.value() > 0) {
-            position = columnPosition.value();
-        }
+            if (columnPosition != null && columnPosition.value() > 0) {
+                position = columnPosition.value();
+            }
 
-        for (ColumnDefinition columnDefinition : columnDefinitions) {
-            if (columnDefinition.getColumnName().toLowerCase().equals(columnName.toLowerCase())) {
-                columnDefinition.setPosition(position);
+            for (ColumnDefinition columnDefinition : columnDefinitions) {
+                if (columnDefinition.getColumnName().toLowerCase().equals(columnName.toLowerCase())) {
+                    columnDefinition.setPosition(position);
+                }
             }
         }
     }
