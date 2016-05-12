@@ -7,4 +7,4 @@ this is example of hbm2ddl column position with custom Annotation.
 - execute JUnit test (SchemaGeneratorTest.java)
 
 ## Detail Explanation (Only Korean)
-
+- http://brantiffy.axisj.com/archives/552

@@ -4,8 +4,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Version;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.dialect.Dialect;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
 import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
@@ -75,12 +73,12 @@ public class SchemaGeneratorBase {
             StandardServiceRegistryBuilder ssrBuilder = new StandardServiceRegistryBuilder( bsr );
 
             Properties prop = new Properties();
-            prop.put("hibernate.dialect", axBootContextConfig.getDataSourceConfig().getHibernateConfig().getHibernateJpaVendorAdapter().getJpaPropertyMap().get("hibernate.dialect"));
+            prop.put("hibernate.dialect", getSessionFactory().getDialect().toString());
             prop.put("hibernate.hbm2ddl.auto", "create");
             prop.put("hibernate.show_sql", "true");
-            prop.put("hibernate.connection.username", axBootContextConfig.getDataSourceConfig().getUsername());
-            prop.put("hibernate.connection.password", axBootContextConfig.getDataSourceConfig().getPassword());
-            prop.put("hibernate.connection.url", axBootContextConfig.getDataSourceConfig().getUrl());
+            prop.put("hibernate.connection.username", environment.getProperty("spring.datasource.username", ""));
+            prop.put("hibernate.connection.password", environment.getProperty("spring.datasource.password", ""));
+            prop.put("hibernate.connection.url", environment.getProperty("spring.datasource.url", ""));
             ssrBuilder.applySettings( prop );
             StandardServiceRegistry standardServiceRegistry = ssrBuilder.build();
 
