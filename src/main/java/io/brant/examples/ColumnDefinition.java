@@ -11,12 +11,17 @@ public class ColumnDefinition {
     private int position = Integer.MAX_VALUE - 10;
 
     public ColumnDefinition(String columnDefinition) {
-        this.columnDefinition = columnDefinition;
-        this.columnName = columnDefinition.split(" ")[0];
-        this.definition = columnDefinition.split(" ")[1];
+        try {
+            this.columnDefinition = columnDefinition;
 
-        if (columnDefinition.toLowerCase().startsWith("primary key")) {
-            position = Integer.MAX_VALUE;
+            if (columnDefinition.toLowerCase().startsWith("primary key")) {
+                position = Integer.MAX_VALUE;
+            } else {
+                this.columnName = columnDefinition.split(" ")[0];
+                this.definition = columnDefinition.split(" ")[1];
+            }
+        } catch (Exception e) {
+            // ignore
         }
     }
 

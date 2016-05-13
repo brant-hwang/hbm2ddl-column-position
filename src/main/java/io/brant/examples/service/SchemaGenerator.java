@@ -51,8 +51,14 @@ public class SchemaGenerator extends SchemaGeneratorBase {
 
         String tableName = ddl.substring("create table ".length(), startColumnBody).trim();
         String columnBody = ddl.substring(startColumnBody + 1, endColumnBody);
+        String primaryKeyDefinition = "";
+
+        int primaryKey = columnBody.indexOf("primary key");
+        primaryKeyDefinition = columnBody.substring(primaryKey);
+        columnBody = columnBody.substring(0, primaryKey - 2);
 
         List<ColumnDefinition> columnDefinitions = Arrays.stream(columnBody.split(", ")).map(ColumnDefinition::new).collect(toList());
+        columnDefinitions.add(new ColumnDefinition(primaryKeyDefinition));
 
         ClassMetadata classMetadata = getClassMetaData(tableName);
 
@@ -107,9 +113,13 @@ public class SchemaGenerator extends SchemaGeneratorBase {
                 position = columnPosition.value();
             }
 
-            for (ColumnDefinition columnDefinition : columnDefinitions) {
-                if (columnDefinition.getColumnName().toLowerCase().equals(columnName.toLowerCase())) {
-                    columnDefinition.setPosition(position);
+            if (columnName != null) {
+                for (ColumnDefinition columnDefinition : columnDefinitions) {
+                    if (columnDefinition.getColumnName() != null) {
+                        if (columnName.toLowerCase().equals(columnDefinition.getColumnName().toLowerCase())) {
+                            columnDefinition.setPosition(position);
+                        }
+                    }
                 }
             }
         }
